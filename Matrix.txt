@@ -1,0 +1,42 @@
+class BaseMatrix:
+    @staticmethod
+    def input():
+        ls = [*open(0)]
+        ls = list(map(lambda x: list(map(int, x.split())), ls))
+        return Matrix(ls)
+    
+    @staticmethod
+    def __genderMatrixByValue(val, shape):
+        return Matrix([[val]*shape[1]]*shape[0])
+
+    @staticmethod
+    def zeros(shape):
+        return Matrix.__genderMatrixByValue(0, shape)
+
+    @staticmethod
+    def ones(shape):
+        return Matrix.__genderMatrixByValue(1, shape)
+
+class Matrix(BaseMatrix):
+    def __init__(self, ls) -> None:
+        self.data = ls
+        self.shape = self.__getShape()
+    
+    def __getShape(self):
+        assert sum([len(it) != len(self.data[0]) for it in self.data]) <= 0, 'error shape in input'
+        return len(self.data), len(self.data[0])
+
+    def __add__(self, other):
+        res = Matrix.zeros(self.shape)
+        # for i in range(self.shape[0]):
+        #     for j in range(self.shape[1]):
+        #         res.data[i][j] = self.data[i][j] + other.data[i][j]
+        res.data = [[x + y for x, y in zip(x_ls, y_ls)]
+            for x_ls, y_ls in zip(self.data, other.data)]
+        return res
+
+
+if __name__ == '__main__':
+    arr1 = Matrix.zeros((3, 3))
+    arr2 = Matrix.ones((3, 3))
+    print((arr1+arr2).data)
